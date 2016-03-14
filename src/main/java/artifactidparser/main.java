@@ -1,6 +1,8 @@
 package artifactidparser;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.jsoup.select.Elements;
 
@@ -9,11 +11,17 @@ public class main {
 		System.out.println("Hello Chine Fraud");
 		System.out.println("#############################################################################");
 		String chinaLink="http://www.chineseclothingonline.com/";
-		LinkGrabber lgr = new LinkGrabber(chinaLink);
-		Elements els = lgr.linkSelector();
-		String links = lgr.joinLinks(els);
-		HashMap<Integer, String> hrefs = lgr.hrefExctractor(links);
-		System.out.println(hrefs);
+		
+		ParserPoint pp = new ParserPoint(chinaLink);
+		pp.start();
+		
+		
+		Iterator it = pp.lgr.hrefsList.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry pair = (Map.Entry)it.next();
+      System.out.println(pair.getKey() + " = " +  pair.getValue());
+    }
+ 
 		System.out.println("#############################################################################");
 	}
 

@@ -1,13 +1,14 @@
 package artifactidparser;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
@@ -15,14 +16,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class LinkGrabber {
+public class LinkGrabber implements StatesEng{
 
 	private String chinalink;
 	private URL url;
-	private String htmlGrabbed;
+	public String htmlGrabbed;
+	public HashMap<String, Integer> hrefsList = new HashMap<String, Integer>();;
 	
 	public LinkGrabber(String link) {
-		chinalink = link;
+		chinalink = link.trim();
+    if (chinalink.endsWith("/")) {
+    	chinalink = chinalink.substring(0, chinalink.length() - 1);
+    }
 	}
 
 	private String grabber() {
@@ -30,7 +35,6 @@ public class LinkGrabber {
 		try {
 			url = new URL(chinalink);
 		} catch (MalformedURLException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 
@@ -41,28 +45,26 @@ public class LinkGrabber {
 						
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		    
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		htmlGrabbed = htmlText.toLowerCase();
 		return htmlText;
 	}
 	
-	public HashMap<Integer, String> hrefExctractor(String text){
+	public HashMap<String, Integer> hrefExctractor(String text){
 		Pattern p = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL);
 		Matcher m = p.matcher(text);
-		HashMap<Integer, String> hrefs = new HashMap<Integer, String>();
+		HashMap<String, Integer> hrefs = new HashMap<String, Integer>();
 		int i = 0;
 		while (m.find()) {
-			hrefs.put(i++, m.group(1));
-		}
+			hrefs.put(m.group(1), StatesEng.UNCHECKED);
+		}	
 		return hrefs;
 	}
 	
@@ -76,11 +78,33 @@ public class LinkGrabber {
 		return listString;
 	}
 	
+	public HashMap<String,Integer> linkVerifier(HashMap<String, Integer> hmp){
+		String baseUrlLowerCase = chinalink.toLowerCase();
+		
+		Iterator it = hmp.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry pair = (Map.Entry)it.next();
+      if(pair.getKey().toString().toLowerCase().indexOf(chinalink) == -1){
+      	it.remove();
+      }
+      
+      // prevent recursive loop
+      if( Math.abs(chinalink.length() - pair.getKey().toString().length()) == 1 ) {
+      	it.remove();
+      }
+		
+  }
+    hrefsList.putAll(hmp);
+		return hmp;
+	} 
+	
 	public Elements linkSelector(){
 		 Document doc = null;
 		 doc = Jsoup.parse(grabber());
 		 Elements hrefs = doc.getElementsByAttribute("href");
 		 return hrefs;
 	}
+	
+	
 	
 }
