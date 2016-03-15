@@ -1,5 +1,6 @@
 package artifactidparser;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,8 +13,7 @@ public class ParserPoint {
 	public LinkGrabber lgr;
 	public ShopChecker shc;
 	public String indexHtml = "";
-	
-	
+
 	public ParserPoint(String url) {
 		currentUrl = url.trim();
 		lgr = new LinkGrabber(currentUrl);
@@ -22,19 +22,20 @@ public class ParserPoint {
 		String shopChecked = shc.checkWords(indexHtml);
 		lgr.hrefExctractor(indexHtml);
 	}
-	
-	public boolean start() {
+
+	public boolean start() throws MalformedURLException {
 		Iterator it = lgr.hrefsList.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry pair = (Map.Entry)it.next();
-  		lgr = new LinkGrabber(pair.getKey().toString());
-  		String nextPageHtml = lgr.htmlGrabberStart();
-  		String shopChecked = shc.checkWords(nextPageHtml);      
-  		if(shc.BUY_DETECTED && shc.ORDER_DETECTED && shc.SHIPMENT_DETECTED) {
-  			return true;
-  		}
-    }
-    return false;
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			lgr = new LinkGrabber(pair.getKey().toString());
+			String nextPageHtml = lgr.htmlGrabberStart();
+			String shopChecked = shc.checkWords(nextPageHtml);
+			// System.out.println(pair.getKey());
+			if (shc.BUY_DETECTED && shc.ORDER_DETECTED && shc.SHIPMENT_DETECTED) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
