@@ -18,6 +18,5 @@ public interface StatesEng {
 	public String BUY = "buy";
 	public String ORDER = "order";
 	public String PAYMENT = "paiment";
-	
-	public HashMap<String, Integer> shopKeys = new HashMap<String, Integer>();
+
 }

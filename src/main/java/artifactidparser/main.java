@@ -8,20 +8,17 @@ import org.jsoup.select.Elements;
 
 public class main {
 	public static void main(String[] args) {
-		System.out.println("Hello Chine Fraud");
-		System.out.println("#############################################################################");
+		System.out.println("Hello Link! Lets check you shop or no)");
 		String chinaLink="http://www.chineseclothingonline.com/";
 		
 		ParserPoint pp = new ParserPoint(chinaLink);
-		pp.start();
+		boolean shopResult = pp.start();
 		
-		
-		Iterator it = pp.lgr.hrefsList.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry pair = (Map.Entry)it.next();
-      System.out.println(pair.getKey() + " = " +  pair.getValue());
-    }
- 
+		if(shopResult) {
+			System.out.println("Shop Detected");
+		}else {
+			System.out.println("It is not a shop");
+		}
 		System.out.println("#############################################################################");
 	}
 

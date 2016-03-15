@@ -30,10 +30,10 @@ public class LinkGrabber implements StatesEng{
     }
 	}
 
-	private String grabber() {
+	public String htmlGrabber(String link) {
 		String htmlText = null;
 		try {
-			url = new URL(chinalink);
+			url = new URL(link);
 		} catch (MalformedURLException e2) {
 			e2.printStackTrace();
 		}
@@ -53,32 +53,26 @@ public class LinkGrabber implements StatesEng{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		htmlGrabbed = htmlText.toLowerCase();
 		return htmlText;
+	}
+	
+	public String htmlGrabberStart() {
+		return htmlGrabber(chinalink);
 	}
 	
 	public HashMap<String, Integer> hrefExctractor(String text){
 		Pattern p = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL);
 		Matcher m = p.matcher(text);
 		HashMap<String, Integer> hrefs = new HashMap<String, Integer>();
-		int i = 0;
 		while (m.find()) {
 			hrefs.put(m.group(1), StatesEng.UNCHECKED);
-		}	
+		}
+		hrefsList.putAll(linkVerifier(hrefs));
+		
 		return hrefs;
 	}
-	
-	public String joinLinks(Elements els) {
-		
-		String listString = "";
 
-		for (Element s : els){
-			listString += s;
-		}
-		return listString;
-	}
-	
-	public HashMap<String,Integer> linkVerifier(HashMap<String, Integer> hmp){
+	private HashMap<String,Integer> linkVerifier(HashMap<String, Integer> hmp){
 		String baseUrlLowerCase = chinalink.toLowerCase();
 		
 		Iterator it = hmp.entrySet().iterator();
@@ -94,17 +88,7 @@ public class LinkGrabber implements StatesEng{
       }
 		
   }
-    hrefsList.putAll(hmp);
 		return hmp;
 	} 
-	
-	public Elements linkSelector(){
-		 Document doc = null;
-		 doc = Jsoup.parse(grabber());
-		 Elements hrefs = doc.getElementsByAttribute("href");
-		 return hrefs;
-	}
-	
-	
 	
 }
