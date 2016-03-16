@@ -16,7 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class LinkGrabber implements StatesEng {
+public class LinkGrabber implements States {
 
 	private String someLink;
 	private URL url;
@@ -81,7 +81,7 @@ public class LinkGrabber implements StatesEng {
 		Matcher m = p.matcher(text);
 		HashMap<String, Integer> hrefs = new HashMap<String, Integer>();
 		while (m.find()) {
-			hrefs.put(m.group(1), StatesEng.UNCHECKED);
+			hrefs.put(m.group(1), States.UNCHECKED);
 			// System.out.println(m.group(1));
 		}
 		hrefsList.putAll(linkVerifier(hrefs));

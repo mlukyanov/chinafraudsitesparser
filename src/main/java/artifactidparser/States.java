@@ -2,7 +2,7 @@ package artifactidparser;
 
 import java.util.HashMap;
 
-public interface StatesEng {
+public interface States {
 
 	// page status verified
 	public int UNCHECKED = -2;

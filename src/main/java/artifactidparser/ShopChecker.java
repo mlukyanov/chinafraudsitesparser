@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ShopChecker implements StatesEng {
+public class ShopChecker implements States {
 
 	private HashMap<String, Integer> shopKeys = new HashMap<String, Integer>();
 	public String htmlText = "";
@@ -21,7 +21,7 @@ public class ShopChecker implements StatesEng {
 		try {
 			text = text.toLowerCase();
 		}catch(NullPointerException n){
-			return StatesEng.NULL + "";
+			return States.NULL + "";
 		}
 		
 		String whatWeHave = "";
@@ -30,15 +30,15 @@ public class ShopChecker implements StatesEng {
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
 
-			if (text.contains(StatesEng.ORDER)) {
+			if (text.contains(States.ORDER)) {
 				ORDER_DETECTED = true;
 			}
 
-			if (text.contains(StatesEng.SHIPMENT)) {
+			if (text.contains(States.SHIPMENT)) {
 				SHIPMENT_DETECTED = true;
 			}
 
-			if (text.contains(StatesEng.BUY)) {
+			if (text.contains(States.BUY)) {
 				BUY_DETECTED = true;
 			}
 
@@ -51,9 +51,9 @@ public class ShopChecker implements StatesEng {
 	}
 
 	private void fillKeys() {
-		shopKeys.put(StatesEng.SHIPMENT, StatesEng.SHIPMENT_FOUND);
-		shopKeys.put(StatesEng.BUY, StatesEng.BUY_FOUND);
-		shopKeys.put(StatesEng.ORDER, StatesEng.ORDER_FOUND);
+		shopKeys.put(States.SHIPMENT, States.SHIPMENT_FOUND);
+		shopKeys.put(States.BUY, States.BUY_FOUND);
+		shopKeys.put(States.ORDER, States.ORDER_FOUND);
 	}
 
 }
