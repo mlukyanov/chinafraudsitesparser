@@ -18,7 +18,12 @@ public class ShopChecker implements StatesEng {
 	}
 
 	public String checkWords(String text) {
-		text = text.toLowerCase();
+		try {
+			text = text.toLowerCase();
+		}catch(NullPointerException n){
+			return StatesEng.NULL + "";
+		}
+		
 		String whatWeHave = "";
 		fillKeys();
 		Iterator it = shopKeys.entrySet().iterator();
@@ -37,10 +42,10 @@ public class ShopChecker implements StatesEng {
 				BUY_DETECTED = true;
 			}
 
-			/*
-			 * if(text.contains(pair.getKey().toString())){ whatWeHave +=
-			 * pair.getKey() + " | "; }
-			 */
+			
+			  if(text.contains(pair.getKey().toString())){ whatWeHave +=
+			  pair.getKey() + " | "; }
+			 
 		}
 		return whatWeHave;
 	}
@@ -49,7 +54,6 @@ public class ShopChecker implements StatesEng {
 		shopKeys.put(StatesEng.SHIPMENT, StatesEng.SHIPMENT_FOUND);
 		shopKeys.put(StatesEng.BUY, StatesEng.BUY_FOUND);
 		shopKeys.put(StatesEng.ORDER, StatesEng.ORDER_FOUND);
-		shopKeys.put(StatesEng.PAYMENT, StatesEng.PAYMENT_FOUND);
 	}
 
 }

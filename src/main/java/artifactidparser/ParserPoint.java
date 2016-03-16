@@ -29,6 +29,7 @@ public class ParserPoint {
 			Map.Entry pair = (Map.Entry) it.next();
 			lgr = new LinkGrabber(pair.getKey().toString());
 			String nextPageHtml = lgr.htmlGrabberStart();
+			System.out.println(nextPageHtml);
 			String shopChecked = shc.checkWords(nextPageHtml);
 			// System.out.println(pair.getKey());
 			if (shc.BUY_DETECTED && shc.ORDER_DETECTED && shc.SHIPMENT_DETECTED) {

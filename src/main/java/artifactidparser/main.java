@@ -10,9 +10,9 @@ import org.jsoup.select.Elements;
 public class main {
 	public static void main(String[] args) {
 		System.out.println("Hello Link! Lets check you shop or no)");
-		String linkToCheck = "http://www.chineseclothingonline.com/";
+		//String linkToCheck = "http://www.chineseclothingonline.com/";
 		// String linkToCheck = "https://en.wikipedia.org/wiki/Main_Page/";
-		// String linkToCheck = "http://www.aliexpress.com";
+		 String linkToCheck = "http://www.aliexpress.com";
 
 		ParserPoint pp = new ParserPoint(linkToCheck);
 		boolean shopResult = false;
