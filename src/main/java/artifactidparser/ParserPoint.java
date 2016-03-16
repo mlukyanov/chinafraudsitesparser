@@ -1,11 +1,7 @@
 package artifactidparser;
 
-import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.jsoup.select.Elements;
 
 public class ParserPoint {
 
@@ -19,24 +15,33 @@ public class ParserPoint {
 		lgr = new LinkGrabber(currentUrl);
 		indexHtml = lgr.htmlGrabberStart();
 		shc = new ShopChecker();
-		String shopChecked = shc.checkWords(indexHtml);
+		Boolean shopChecked = shc.checkWords(indexHtml);
 		lgr.hrefExctractor(indexHtml);
 	}
 
-	public boolean start() throws MalformedURLException {
+	public boolean start() {
+		System.out.println("Work started. Fill free to wait.");
+		boolean shopChecked = false;
 		Iterator it = lgr.hrefsList.entrySet().iterator();
-		while (it.hasNext()) {
+		int i = 0;
+		while (it.hasNext() && !shopChecked) {
 			Map.Entry pair = (Map.Entry) it.next();
-			lgr = new LinkGrabber(pair.getKey().toString());
+			lgr.htmlGrabber(pair.getKey().toString());
 			String nextPageHtml = lgr.htmlGrabberStart();
-			System.out.println(nextPageHtml);
-			String shopChecked = shc.checkWords(nextPageHtml);
-			// System.out.println(pair.getKey());
-			if (shc.BUY_DETECTED && shc.ORDER_DETECTED && shc.SHIPMENT_DETECTED) {
-				return true;
+			shopChecked = shc.checkWords(nextPageHtml);
+			System.out.print(" . ");
+			i++;
+			if (i % 10 == 0) {
+				System.out.println();
+			}
+
+			if (shopChecked) {
+				System.out.println("Done!");
+				return shopChecked;
 			}
 		}
-		return false;
+		System.out.println("Done!");
+		return shopChecked;
 	}
 
 }

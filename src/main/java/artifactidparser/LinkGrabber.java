@@ -11,10 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class LinkGrabber implements States {
 
@@ -22,7 +18,7 @@ public class LinkGrabber implements States {
 	private URL url;
 	public String htmlGrabbed;
 	public String domain;
-	public HashMap<String, Integer> hrefsList = new HashMap<String, Integer>();;
+	public HashMap<String, Integer> hrefsList = new HashMap<String, Integer>();
 
 	public LinkGrabber(String link) {
 		someLink = link.trim();
@@ -42,16 +38,15 @@ public class LinkGrabber implements States {
 		if (domain.startsWith("www.")) {
 			domain = domain.substring(4);
 		}
-		// System.out.println("Donain is: " + domain);
-
+		System.out.println("Exctracting Domain: " + domain);
 	}
 
 	public String htmlGrabber(String link) {
 		String htmlText = null;
 		try {
 			url = new URL(link);
-		} catch (MalformedURLException e2) {
-			e2.printStackTrace();
+		} catch (MalformedURLException m) {
+			m.printStackTrace();
 		}
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
@@ -76,35 +71,37 @@ public class LinkGrabber implements States {
 		return htmlGrabber(someLink);
 	}
 
-	public HashMap<String, Integer> hrefExctractor(String text) {
+	public boolean hrefExctractor(String text) {
 		Pattern p = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL);
 		Matcher m = p.matcher(text);
-		HashMap<String, Integer> hrefs = new HashMap<String, Integer>();
 		while (m.find()) {
-			hrefs.put(m.group(1), States.UNCHECKED);
-			// System.out.println(m.group(1));
+			hrefsList.put(m.group(1), States.LINK_STATE.get("uncheked"));
 		}
-		hrefsList.putAll(linkVerifier(hrefs));
-
-		return hrefs;
+		if (hrefsList.isEmpty()) {
+			return false;
+		}
+		linkVerifier();
+		return true;
 	}
 
-	private HashMap<String, Integer> linkVerifier(HashMap<String, Integer> hmp) {
+	private boolean linkVerifier() {
+		System.out.println("Removing garbage links");
 		String baseUrlLowerCase = someLink.toLowerCase();
-
-		Iterator it = hmp.entrySet().iterator();
+		HashMap<String, Integer> hrefs = new HashMap<String, Integer>();
+		Iterator it = hrefsList.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
-			if (pair.getKey().toString().toLowerCase().indexOf(domain) == -1) {
-				it.remove();
+			int sitenameIndex = pair.getKey().toString().toLowerCase().indexOf(domain);
+			if (sitenameIndex != -1 && sitenameIndex < 20) {
+				hrefs.put(pair.getKey().toString(), (int) pair.getValue());
 			}
-			/*
-			 * try { // prevent recursive loop if( Math.abs(someLink.length() -
-			 * pair.getKey().toString().length()) == 1 ) { it.remove(); }
-			 * }catch(IllegalStateException i) { i.printStackTrace(); }
-			 */
+			it.remove();
 		}
-		return hmp;
+		if (hrefs.isEmpty()) {
+			return false;
+		}
+		hrefsList = hrefs;
+		return true;
 	}
 
 }
