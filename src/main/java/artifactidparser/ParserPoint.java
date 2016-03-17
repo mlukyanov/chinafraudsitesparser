@@ -20,7 +20,7 @@ public class ParserPoint {
 	}
 
 	public boolean start() {
-		System.out.println("Work started. Fill free to wait.");
+		System.out.println("Work started. Fill free to wait:");
 		boolean shopChecked = false;
 		Iterator it = lgr.hrefsList.entrySet().iterator();
 		int i = 0;
@@ -29,9 +29,9 @@ public class ParserPoint {
 			lgr.htmlGrabber(pair.getKey().toString());
 			String nextPageHtml = lgr.htmlGrabberStart();
 			shopChecked = shc.checkWords(nextPageHtml);
-			System.out.print(" . ");
+			System.out.print(". ");
 			i++;
-			if (i % 10 == 0) {
+			if (i % 32 == 0) {
 				System.out.println();
 			}
 

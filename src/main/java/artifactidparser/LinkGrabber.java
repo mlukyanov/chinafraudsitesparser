@@ -46,7 +46,7 @@ public class LinkGrabber implements States {
 		try {
 			url = new URL(link);
 		} catch (MalformedURLException m) {
-			m.printStackTrace();
+			return htmlText;
 		}
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
@@ -56,7 +56,7 @@ public class LinkGrabber implements States {
 
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				return htmlText;
 			}
 
 		} catch (UnsupportedEncodingException e1) {

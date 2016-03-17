@@ -17,7 +17,6 @@ public class ShopChecker implements States {
 			if (text.contains(States.SHOP_KEYWORDS[i])) {
 				shopValue += (int) States.LINK_STATE.get(States.SHOP_KEYWORDS[i]);
 			}
-
 		}
 
 		if (shopValue == States.LINK_STATE.get(States.SHOP)) {
